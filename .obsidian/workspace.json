@@ -11,14 +11,24 @@
             "id": "5753f72aa2469bc5",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "docs/Components.md",
-                "mode": "source",
-                "source": false
+                "file": "docs/Reference/Datasheets/pcm5102a_dac_schematic.pdf"
               },
-              "icon": "lucide-file",
-              "title": "Components"
+              "icon": "lucide-file-text",
+              "title": "pcm5102a_dac_schematic"
+            }
+          },
+          {
+            "id": "2ee4a78dd1f17c8e",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "docs/Reference/Datasheets/pcm5102a.pdf"
+              },
+              "icon": "lucide-file-text",
+              "title": "pcm5102a"
             }
           }
         ]
@@ -185,19 +195,20 @@
   },
   "active": "5753f72aa2469bc5",
   "lastOpenFiles": [
-    "docs/Reference/Recources/Getting started with DAC - stm32mcu.pdf",
-    "docs/Reference/Recources/Getting started with I2C - stm32mcu.pdf",
-    "docs/Reference/Recources/Getting started with SPI - stm32mcu.pdf",
-    "docs/Reference/Recources/Getting started with DMA - stm32mcu.pdf",
+    "Debug/MBPlayer.elf",
+    "Debug/Core/Src/main.o",
+    "Core/Inc/sample-3s.h",
+    "docs/Reference/Datasheets/pcm5102a.pdf",
+    "docs/Reference/Datasheets/um2407-stm32h7-nucleo144-boards-mb1364-stmicroelectronics.pdf",
+    "Core/Inc/audio_test_data.h",
+    "Debug/Core/Src/main.cyclo",
+    "Debug/Core/Src/main.su",
+    "Debug/Core/Src/stm32h7xx_hal_msp.o",
+    "Debug/Core/Src/stm32h7xx_hal_msp.cyclo",
+    "Debug/Core/Src/stm32h7xx_hal_msp.su",
     "docs/Components.md",
     "docs/Inbbox/Recources.md",
     "docs/Inbbox/Iteration 1.md",
-    "docs/Project_Log/00_Project_Planning/27.06.2026.md",
-    "docs/Reference/Recources",
-    "docs/Reference/Datasheets/pcm5102a_dac_schematic.pdf",
-    "docs/Reference/datasheets/pcm5102a_dac_schematic.pdf.opdownload",
-    "docs/Reference/Datasheets",
-    "docs/Reference/datasheet",
-    "docs/Reference/New folder"
+    "docs/Project_Log/00_Project_Planning/27.06.2026.md"
   ]
 }
