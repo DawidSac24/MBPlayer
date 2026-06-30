@@ -1,6 +1,6 @@
 ## DAC pinout
 ![[DAC_pinout_datasheet.png]]
-From the [[pcm5102a_dac_schematic.pdf]] datasheet, the H3L should be soldered to 3v3 in order to connect the `XSMT` pin to 3V3 (allowing to soft un-mute the output). I had to solder these H1L - H4L and SCK jumper since none of theme where actually soldered (every pin on GND except for H3L).
+From the [PCM5102A datasheet](../../Reference/Datasheets/pcm5102a_dac_schematic.pdf), the H3L should be soldered to 3v3 in order to connect the `XSMT` pin to 3V3 (allowing to soft un-mute the output). I had to solder the[]()se H1L - H4L and SCK jumper since none of theme where actually soldered (every pin on GND except for H3L).
 ## DAC to microcontroller connection
 Following the [H7 datasheet](um2407-stm32h7-nucleo144-boards-mb1364-stmicroelectronics.pdf) and using the Cube Ide, I chose the i2S1 Connection with Half-Duplex Master Transmit.
 
