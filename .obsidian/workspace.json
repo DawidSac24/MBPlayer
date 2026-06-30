@@ -4,31 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "46e8ce4967d514ad",
+        "id": "69c961f25b56983d",
         "type": "tabs",
         "children": [
           {
-            "id": "5753f72aa2469bc5",
+            "id": "bf1793e2fa679aa2",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "docs/Reference/Datasheets/pcm5102a_dac_schematic.pdf"
+                "file": "Docs/Project_Log/01_DAC_tests/Comonents.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "pcm5102a_dac_schematic"
-            }
-          },
-          {
-            "id": "2ee4a78dd1f17c8e",
-            "type": "leaf",
-            "state": {
-              "type": "pdf",
-              "state": {
-                "file": "docs/Reference/Datasheets/pcm5102a.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "pcm5102a"
+              "icon": "lucide-file",
+              "title": "Comonents"
             }
           }
         ]
@@ -123,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/Components.md",
+                "file": "Docs/Project_Log/01_DAC_tests/Comonents.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Components"
+              "title": "Outgoing links from Comonents"
             }
           },
           {
@@ -166,21 +156,31 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/Components.md",
+                "file": "Docs/Project_Log/01_DAC_tests/Comonents.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Components"
+              "title": "Outline of Comonents"
+            }
+          },
+          {
+            "id": "ae892af9cb614678",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -190,25 +190,33 @@
       "daily-notes:Open today's daily note": false,
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5753f72aa2469bc5",
+  "active": "bf1793e2fa679aa2",
   "lastOpenFiles": [
-    "Debug/MBPlayer.elf",
-    "Debug/Core/Src/main.o",
-    "Core/Inc/sample-3s.h",
-    "docs/Reference/Datasheets/pcm5102a.pdf",
-    "docs/Reference/Datasheets/um2407-stm32h7-nucleo144-boards-mb1364-stmicroelectronics.pdf",
-    "Core/Inc/audio_test_data.h",
-    "Debug/Core/Src/main.cyclo",
-    "Debug/Core/Src/main.su",
-    "Debug/Core/Src/stm32h7xx_hal_msp.o",
-    "Debug/Core/Src/stm32h7xx_hal_msp.cyclo",
-    "Debug/Core/Src/stm32h7xx_hal_msp.su",
+    "Docs/Project_Log/00_Project_Planning/Project Overview - 27.06.2026.md",
+    "Docs/Reference/Datasheets/pcm5102a_dac_schematic.pdf",
+    "Docs/Project_Log/01_DAC_tests/Comonents.md",
+    "Docs/Inbbox/Recources.md",
+    "Docs/Inbbox/Iteration 1.md",
+    "Docs/Reference/Recources/Getting started with DAC - stm32mcu.pdf",
+    "Docs/Components.md",
+    "Docs/Reference/Datasheets/um2407-stm32h7-nucleo144-boards-mb1364-stmicroelectronics.pdf",
+    "Docs/Project_Log/01_DAC_tests/DAC and Microcontroller connection - 29.06.2026.md",
+    "Pasted image 20260630141519.png",
+    "Pasted image 20260630141526.png",
+    "docs/Reference/Datasheets/pcm5102a_dac_schematic.pdf",
+    "Docs/Reference/Recources/Getting started with SPI - stm32mcu.pdf",
+    "Docs/Reference/Recources/Getting started with I2C - stm32mcu.pdf",
+    "Docs/Reference/Recources/Getting started with DMA - stm32mcu.pdf",
+    "Docs/Reference/Datasheets/pcm5102a.pdf",
+    "Docs/Project_Log/01_DAC_tests",
+    "Docs/Project_Log/00_Project_Planning",
+    "docs/Project_Log/00_Project_Planning/27.06.2026.md",
     "docs/Components.md",
     "docs/Inbbox/Recources.md",
-    "docs/Inbbox/Iteration 1.md",
-    "docs/Project_Log/00_Project_Planning/27.06.2026.md"
+    "docs/Inbbox/Iteration 1.md"
   ]
 }
