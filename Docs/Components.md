@@ -19,7 +19,7 @@
 - **`I2S_DATA_IN`:** Receives audio from a microphone (for Module 3).
 - **`MCLK` (Master Clock)**
 
-**3. The I2C Bus (The Control Pipeline)**
+**3. The I2C Bus**
 - **`I2C_SDA` (Data)** & **`I2C_SCL` (Clock)**
 
 **4. Utility & Auto-Detection**
