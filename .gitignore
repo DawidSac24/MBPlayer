@@ -53,3 +53,16 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+Debug/
+Release/
+bin/
+obj/
+
+.atmelstart/
+.mxproject
+*.launch
+
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
