@@ -1,0 +1,1 @@
+I use the SDMMC1 in the CubeMX with the SD 4 bits Wide bus to maximise bandwidth speed. I also gave set up the PG3 as a GPIO Input for the sd card detection in the FatFS library.
