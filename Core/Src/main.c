@@ -81,7 +81,6 @@ static void MX_SDMMC1_SD_Init(void);
 //	}
 //	return -1;
 //}
-
 uint8_t BSP_SD_IsDetected(void) {
 	__IO uint8_t status = SD_PRESENT;
 
@@ -168,7 +167,7 @@ int main(void) {
 			(hsd1.SdCard.BlockSize * hsd1.SdCard.BlockNbr) / 1000);
 	printf("Card Version : %ld\r\n", hsd1.SdCard.CardVersion);
 
-	list_files();
+//	list_files();
 
 	while (1) {
 
@@ -375,7 +374,9 @@ void Error_Handler(void) {
 	/* User can add his own implementation to report the HAL error return state */
 	__disable_irq();
 	while (1) {
-		printf("In Error Mode!\r\n");
+		BSP_LED_Toggle(LED_GREEN);
+		BSP_LED_Toggle(LED_RED);
+		BSP_LED_Toggle(LED_YELLOW);
 		HAL_Delay(1000);
 	}
 	/* USER CODE END Error_Handler_Debug */
