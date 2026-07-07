@@ -61,7 +61,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define SD_DET_Pin GPIO_PIN_3
-#define SD_DET_GPIO_Port GPIOG
+#define SD_DET_GPIO_Port GPIOA
 #define SWDIO_Pin GPIO_PIN_13
 #define SWDIO_GPIO_Port GPIOA
 #define SWCLK_Pin GPIO_PIN_14
