@@ -1,0 +1,2 @@
+[Commit: SD Card implementation](https://github.com/DawidSac24/MBPlayer/commit/9937c7f49981acc460833f2c0c3d441b0eaf2abb)
+Added the SD Card connector via SDMMC1 - SDIO with 1 bit bus and DMA. I could not make the 4 bit wide bus work for now. It may be because of the interference form the jumper wires.
