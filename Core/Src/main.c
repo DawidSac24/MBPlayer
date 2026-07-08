@@ -17,15 +17,15 @@
  */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <App/FileSystem.h>
 #include "main.h"
 #include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
 #include "App/Log.h"
+#include "App/sd_driver.h"
 
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,13 +88,7 @@ static void MX_SDMMC1_SD_Init(void);
 //	return -1;
 //}
 uint8_t BSP_SD_IsDetected(void) {
-//	__IO uint8_t status = SD_PRESENT;
-//
-//	if (HAL_GPIO_ReadPin(SD_DET_GPIO_Port, SD_DET_Pin) != GPIO_PIN_RESET) {
-//		status = SD_NOT_PRESENT;
-//	}
-//	return status;
-	return SD_PRESENT;
+	return sd_getDetectPinState();
 }
 /* USER CODE END 0 */
 
@@ -142,6 +136,9 @@ int main(void) {
 	/* USER CODE END 2 */
 
 	/* Initialize leds */
+	BSP_LED_Init(LED_GREEN);
+	BSP_LED_Init(LED_YELLOW);
+	BSP_LED_Init(LED_RED);
 
 	/* Initialize USER push-button, will be used to trigger an interrupt each time it's pressed.*/
 	BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
@@ -158,18 +155,12 @@ int main(void) {
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	log_init(1, LOG_DEBUG);
+	log_open(1, LOG_DEBUG);
 	printf("\r\n----------\r\nStarting\r\n");
 
 	// FatFS card mounting
-	printf("Mounting the SD Card:\r\n");
-	printf("\r\n-------------\r\n");
-	FRESULT res = f_mount(&SDFatFS, (TCHAR const*) SDPath, 1);
-	if (res != FR_OK) {
-		printf("Unable to mount disk: %d\n", res);
-		Error_Handler();
-	}
-
+	sd_init(SD_DET_Pin, SD_DET_GPIO_Port, &SDFatFS, SDPath);
+	sd_mount();
 	printf("SD Card Information: \r\n");
 	printf("Block size : %ld\r\n", hsd1.SdCard.BlockSize);
 	printf("Block nmbr : %ld\r\n", hsd1.SdCard.BlockNbr);
@@ -177,7 +168,7 @@ int main(void) {
 			(hsd1.SdCard.BlockSize * hsd1.SdCard.BlockNbr) / 1000);
 	printf("Card Version : %ld\r\n", hsd1.SdCard.CardVersion);
 
-	list_files();
+	fs_list_files();
 
 //	printf("Opening test.wav...\r\n");
 //	FIL wavFile;
@@ -199,7 +190,7 @@ int main(void) {
 
 	// 3. The Ping-Pong loop
 	while (1) {
-		log_message(CORE, LOG_INFO, "Hello World!\r\n");
+//		LOG(CORE, LOG_INFO, "Hello World!\r\n");
 		BSP_LED_Toggle(LED_GREEN);
 		HAL_Delay(1000);
 
@@ -345,9 +336,9 @@ static void MX_SDMMC1_SD_Init(void) {
 	hsd1.Init.BusWide = SDMMC_BUS_WIDE_1B;
 	hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
 	hsd1.Init.ClockDiv = 20;
-//	if (HAL_SD_Init(&hsd1) != HAL_OK) {
-//		Error_Handler();
-//	}
+	if (HAL_SD_Init(&hsd1) != HAL_OK) {
+		Error_Handler();
+	}
 	/* USER CODE BEGIN SDMMC1_Init 2 */
 //	if (HAL_SD_ConfigWideBusOperation(&hsd1, SDMMC_BUS_WIDE_4B) != HAL_OK) {
 //		Error_Handler();
@@ -391,7 +382,7 @@ static void MX_GPIO_Init(void) {
 	/*Configure GPIO pin : SD_DET_Pin */
 	GPIO_InitStruct.Pin = SD_DET_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(SD_DET_GPIO_Port, &GPIO_InitStruct);
 
 	/* USER CODE BEGIN MX_GPIO_Init_2 */

@@ -17,11 +17,13 @@ static struct sLogState {
 	eLogLevel outputLevel;
 } gLogData;
 
-static struct sLogState gLogData;
+void log_record(const eLogSubsystem sys, const eLogLevel level, const char *msg);
 
-void log_init(const bool globalOn, const eLogLevel level) {
+void log_open(const bool globalOn, const eLogLevel level) {
 	gLogData.globalLogOn = globalOn;
 	gLogData.outputLevel = level;
+
+
 }
 
 void log_message(const eLogSubsystem sys, const eLogLevel level,
@@ -31,11 +33,15 @@ void log_message(const eLogSubsystem sys, const eLogLevel level,
 	if (level >= NUM_LOG_LEVELS || sys >= NUM_SUBSYSTEMS)
 		return;
 
-	static char log_buffer[128];
+	static char log_buffer[LOG_BUFFER_SIZE];
 	snprintf(log_buffer, sizeof(log_buffer), "[%s][%s] %s\n",
 			LogLevelStrings[level], SubsystemStrings[sys], msg);
 
 	printf("%s", log_buffer);
 
-//	sd_write(log_buffer);
+	log_record(sys, level, msg);
+}
+
+void log_record(const eLogSubsystem sys, const eLogLevel level, const char *msg) {
+	return;
 }

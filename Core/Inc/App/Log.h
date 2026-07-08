@@ -10,6 +10,15 @@
 
 #include <stdbool.h>
 
+#define LOG_BUFFER_SIZE 128
+
+#define LOG(sys, level, format, ...) do { \
+    char _log_buf[128]; \
+    snprintf(_log_buf, sizeof(_log_buf), format, ##__VA_ARGS__); \
+    log_message(sys, level, _log_buf); \
+} while(0)
+
+
 typedef enum {
 	CORE, FILESYSTEM, AUDIO, NUM_SUBSYSTEMS
 } eLogSubsystem;
@@ -20,7 +29,7 @@ typedef enum {
 extern const char *const LogLevelStrings[];
 extern const char *const SubsystemStrings[];
 
-void log_init(const bool globalOn, const eLogLevel level);
+void log_open(const bool globalOn, const eLogLevel level);
 
 void log_message(const eLogSubsystem sys, const eLogLevel level,
 		const char *msg);
