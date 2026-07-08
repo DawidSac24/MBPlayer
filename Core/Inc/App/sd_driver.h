@@ -12,11 +12,24 @@
 #include <stdbool.h>
 
 typedef enum {
-	SD_STATE_MISSING, SD_STATE_INSERTED, SD_STATE_UNMOUNTED, SD_STATE_MOUNTED, SD_STATE_ERROR
-} eSdState;
+	SD_STATE_MISSING,
+	SD_STATE_INSERTED,
+	SD_STATE_UNMOUNTED,
+	SD_STATE_MOUNTED,
+	SD_STATE_ERROR
+} eSD_state;
 
-void sd_init(uint16_t detect_pin, GPIO_TypeDef *detect_port, FATFS *fs,
-		const char *root_filePath);
+typedef void (*sd_event_callback_t)(eSD_state new_state);
+
+typedef struct {
+	GPIO_TypeDef *detect_port;
+	uint16_t detect_pin;
+	FATFS *fs;
+	const char *root_filePath;
+	sd_event_callback_t event_cb;
+} SD_initStruct;
+
+void sd_init(const SD_initStruct *init_struct);
 
 void sd_mount();
 void sd_unmount();

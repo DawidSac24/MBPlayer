@@ -29,7 +29,7 @@ typedef enum {
 extern const char *const LogLevelStrings[];
 extern const char *const SubsystemStrings[];
 
-void log_open(const bool globalOn, const eLogLevel level);
+void log_init(const bool globalOn, const eLogLevel level);
 
 void log_message(const eLogSubsystem sys, const eLogLevel level,
 		const char *msg);

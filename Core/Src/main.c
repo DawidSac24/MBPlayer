@@ -28,6 +28,7 @@
 /* USER CODE BEGIN Includes */
 #include "App/Log.h"
 #include "App/sd_driver.h"
+#include "App/fileSystem.h"
 
 #include <stdio.h>
 /* USER CODE END Includes */
@@ -152,12 +153,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	log_open(1, LOG_DEBUG);
+	log_init(1, LOG_DEBUG);
 	printf("\r\n----------\r\nStarting\r\n");
 
 	// FatFS card mounting
-	sd_init(SD_DET_Pin, SD_DET_GPIO_Port, &SDFatFS, SDPath);
-	sd_mount();
+	SD_initStruct SD_init_struct;
+	SD_init_struct.detect_pin = SD_DET_Pin;
+	SD_init_struct.detect_port = SD_DET_GPIO_Port;
+	SD_init_struct.fs = &SDFatFS;
+	SD_init_struct.root_filePath = SDPath;
+	fs_init(&SD_init_struct);
 	printf("SD Card Information: \r\n");
 	printf("Block size : %ld\r\n", hsd1.SdCard.BlockSize);
 	printf("Block nmbr : %ld\r\n", hsd1.SdCard.BlockNbr);

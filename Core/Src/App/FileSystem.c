@@ -4,21 +4,23 @@
  *  Created on: Jul 4, 2026
  *      Author: Dawid Sac
  */
-#include <App/sd_driver.h>
 #include "App/FileSystem.h"
+#include "App/sd_driver.h"
+#include "App/Log.h"
 
 #include "fatfs.h"
 
-//static struct sFileSystemState {
-//	char config_filepath[24];
-//} gFileSystemData;
+static const char *CONFIG_PATH = "/.MBPlayerConfig";
 
-//bool fs_init() {
-//	if (sd_mount())
-//		return 0;
-//
-//	sd_openRoot();
-//}
+static struct sFileSystemState {
+} gFS_context;
+
+static void fs_sd_event_handler(eSD_state new_state);
+
+void fs_init(SD_initStruct *init_struct) {
+	init_struct->event_cb = fs_sd_event_handler;
+	sd_init(init_struct);
+}
 
 void fs_list_files(void) {
 	DIR dir;
@@ -45,3 +47,31 @@ void fs_list_files(void) {
 	}
 }
 
+static void fs_verify_directories(void) {
+	FILINFO fno;
+
+	// Check for the Config folder
+	if (f_stat("/.MBPlayerConfig", &fno) != FR_OK) {
+		LOG(FILESYSTEM, LOG_INFO, "Config folder missing. Creating...\r\n");
+		f_mkdir("/.MBPlayerConfig");
+		f_chmod("/.MBPlayerConfig", AM_HID | AM_SYS, AM_HID | AM_SYS); // Hide it
+	}
+
+	// Check for the Metadata/Database folder
+	if (f_stat("/.MBPlayer_metadata", &fno) != FR_OK) {
+		LOG(FILESYSTEM, LOG_INFO, "Metadata folder missing. Creating...\r\n");
+		f_mkdir("/.MBPlayer_metadata");
+		f_chmod("/.MBPlayer_metadata", AM_HID | AM_SYS, AM_HID | AM_SYS);
+	}
+}
+
+static void fs_sd_event_handler(eSD_state new_state) {
+	if (new_state == SD_STATE_MOUNTED) {
+		LOG(FILESYSTEM, LOG_INFO,
+				"SD mounted. Verifying system folders...\r\n");
+		fs_verify_directories();
+	} else if (new_state == SD_STATE_MISSING) {
+		LOG(FILESYSTEM, LOG_WARN, "SD removed! Clearing active paths...\r\n");
+		// Clear your active playlist state, tell the audio DMA to stop, etc.
+	}
+}

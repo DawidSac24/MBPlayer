@@ -12,23 +12,23 @@ const char *const LogLevelStrings[] = { "DEBUG", "INFO", "WARN", "ERROR",
 		"CRITICAL" };
 const char *const SubsystemStrings[] = { "CORE", "FILESYSTEM", "AUDIO" };
 
-static struct sLogState {
+static struct {
 	bool globalLogOn;
 	eLogLevel outputLevel;
-} gLogData;
+} gLog_context;
 
 void log_record(const eLogSubsystem sys, const eLogLevel level, const char *msg);
 
-void log_open(const bool globalOn, const eLogLevel level) {
-	gLogData.globalLogOn = globalOn;
-	gLogData.outputLevel = level;
+void log_init(const bool globalOn, const eLogLevel level) {
+	gLog_context.globalLogOn = globalOn;
+	gLog_context.outputLevel = level;
 
 
 }
 
 void log_message(const eLogSubsystem sys, const eLogLevel level,
 		const char *msg) {
-	if (!gLogData.globalLogOn || level < gLogData.outputLevel)
+	if (!gLog_context.globalLogOn || level < gLog_context.outputLevel)
 		return;
 	if (level >= NUM_LOG_LEVELS || sys >= NUM_SUBSYSTEMS)
 		return;

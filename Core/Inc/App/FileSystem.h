@@ -8,9 +8,12 @@
 #ifndef INC_APP_FILESYSTEM_H_
 #define INC_APP_FILESYSTEM_H_
 
+#include "App/sd_driver.h"
+
+#include "App/sd_driver.h"
 #include <stdbool.h>
 
-bool fs_init();
+void fs_init(SD_initStruct *init_struct);
 
 void fs_list_files();
 
