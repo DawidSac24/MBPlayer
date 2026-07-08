@@ -8,6 +8,8 @@
 #include <App/sd_driver.h>
 #include "App/Log.h"
 
+#include "sdmmc.h"
+
 static struct sSdState {
 	uint16_t detect_pin;
 	GPIO_TypeDef *detect_port;
@@ -16,8 +18,7 @@ static struct sSdState {
 	eSdState state;
 } gSdData;
 
-static volatile uint8_t sd_interrupt_flag = 0;
-static volatile uint32_t sd_interrupt_time = 0;
+extern SD_HandleTypeDef hsd1;
 
 void sd_init(uint16_t detect_pin, GPIO_TypeDef *detect_port, FATFS *fs,
 		const char *root_filePath) {
@@ -31,60 +32,63 @@ void sd_init(uint16_t detect_pin, GPIO_TypeDef *detect_port, FATFS *fs,
 		gSdData.state = SD_STATE_MISSING;
 }
 
-bool sd_mount() {
-	if (gSdData.state != SD_STATE_INSERTED) {
+void sd_mount() {
+	if (gSdData.state == SD_STATE_MISSING) {
 		LOG(FILESYSTEM, LOG_ERROR,
 				"Unable to mount SD card: SD card is missing\r\n");
-		return false;
+		return;
 	}
+	if (gSdData.state == SD_STATE_MOUNTED) {
+		LOG(FILESYSTEM, LOG_ERROR,
+				"Unable to mount SD card: SD card is already mounted\r\n");
+		return;
+	}
+	if (gSdData.state == SD_STATE_UNMOUNTED)
+		MX_SDMMC1_SD_Init();
+
 	FRESULT res = f_mount(gSdData.fs, (TCHAR const*) gSdData.root_filePath, 1);
 	if (res != FR_OK) {
-		LOG(FILESYSTEM, LOG_ERROR, "Unable to mount SD card: %d\n", res);
+		LOG(FILESYSTEM, LOG_ERROR, "Unable to mount SD card: %d\r\n", res);
 		gSdData.state = SD_STATE_ERROR;
-		return false;
+		return;
 	}
+
 	gSdData.state = SD_STATE_MOUNTED;
 	LOG(FILESYSTEM, LOG_INFO, "SD card successfully mounted!\r\n");
-
-	return true;
 }
 
 void sd_unmount() {
-	f_mount(0, (TCHAR const*) SDPath, 0);
+	f_mount(0, (TCHAR const*) gSdData.root_filePath, 0);
+	HAL_SD_DeInit(&hsd1);
+
 	gSdData.state = SD_STATE_UNMOUNTED;
 }
 
 void sd_process() {
-	if (sd_interrupt_flag == 0)
-		return;
-
-	if ((HAL_GetTick() - sd_interrupt_time) < 100)
-		return;
-
-	if (sd_getDetectPinState()
-			== SD_PRESENT) {
-		gSdData.state = SD_STATE_INSERTED;
-		sd_mount();
+	if (sd_getDetectPinState() == SD_PRESENT) {
+		if (gSdData.state == SD_STATE_MISSING) {
+			gSdData.state = SD_STATE_INSERTED;
+		}
+		if (gSdData.state == SD_STATE_INSERTED
+				|| gSdData.state == SD_STATE_UNMOUNTED) {
+			LOG(FILESYSTEM, LOG_INFO, "SD Card detected!\r\n");
+			sd_mount();
+			return;
+		}
 	} else {
-		gSdData.state = SD_STATE_MISSING;
-		sd_unmount();
+		if (gSdData.state != SD_STATE_UNMOUNTED) {
+			LOG(FILESYSTEM, LOG_INFO, "No SD Card detected!\r\n");
+			sd_unmount();
+		}
 	}
-
-	sd_interrupt_flag = 0;
 }
 
 __IO uint8_t sd_getDetectPinState() {
 	__IO uint8_t status = SD_PRESENT;
 
-	if (HAL_GPIO_ReadPin(SD_DET_GPIO_Port, SD_DET_Pin) != GPIO_PIN_SET) {
+	if (HAL_GPIO_ReadPin(gSdData.detect_port, gSdData.detect_pin)
+			!= GPIO_PIN_SET) {
 		status = SD_NOT_PRESENT;
 	}
 	return status;
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-	if (GPIO_Pin == gSdData.detect_pin) {
-		sd_interrupt_flag = 1;
-		sd_interrupt_time = HAL_GetTick();
-	}
 }

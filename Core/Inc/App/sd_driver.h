@@ -18,7 +18,7 @@ typedef enum {
 void sd_init(uint16_t detect_pin, GPIO_TypeDef *detect_port, FATFS *fs,
 		const char *root_filePath);
 
-bool sd_mount();
+void sd_mount();
 void sd_unmount();
 bool sd_isMounted();
 

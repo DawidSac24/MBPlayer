@@ -4,10 +4,23 @@
  *  Created on: Jul 4, 2026
  *      Author: Dawid Sac
  */
-#include <App/FileSystem.h>
+#include <App/sd_driver.h>
+#include "App/FileSystem.h"
+
 #include "fatfs.h"
 
-void list_files(void) {
+//static struct sFileSystemState {
+//	char config_filepath[24];
+//} gFileSystemData;
+
+//bool fs_init() {
+//	if (sd_mount())
+//		return 0;
+//
+//	sd_openRoot();
+//}
+
+void fs_list_files(void) {
 	DIR dir;
 	FILINFO fno;
 	FRESULT res;
@@ -23,7 +36,7 @@ void list_files(void) {
 			if (fno.fattrib & AM_DIR) {
 				printf("Folder: %s\r\n", fno.fname);
 			} else {
-				printf("File: %s (size: %llu bytes)\r\n", fno.fname, fno.fsize);
+				printf("File: %s \r\n", fno.fname);
 			}
 		}
 		f_closedir(&dir);

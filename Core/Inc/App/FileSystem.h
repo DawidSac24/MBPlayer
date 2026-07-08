@@ -8,6 +8,10 @@
 #ifndef INC_APP_FILESYSTEM_H_
 #define INC_APP_FILESYSTEM_H_
 
-void list_files();
+#include <stdbool.h>
+
+bool fs_init();
+
+void fs_list_files();
 
 #endif /* INC_APP_FILESYSTEM_H_ */
