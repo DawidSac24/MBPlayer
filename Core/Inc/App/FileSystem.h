@@ -10,10 +10,10 @@
 
 #include "App/sd_driver.h"
 
-#include "App/sd_driver.h"
 #include <stdbool.h>
 
 void fs_init(SD_initStruct *init_struct);
+void fs_process();
 
 void fs_list_files();
 

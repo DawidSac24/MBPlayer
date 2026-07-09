@@ -18,9 +18,8 @@
     log_message(sys, level, _log_buf); \
 } while(0)
 
-
 typedef enum {
-	CORE, FILESYSTEM, AUDIO, NUM_SUBSYSTEMS
+	CORE, ALLOCATOR, FILESYSTEM, AUDIO, NUM_SUBSYSTEMS
 } eLogSubsystem;
 typedef enum {
 	LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_CRITICAL, NUM_LOG_LEVELS

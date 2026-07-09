@@ -10,10 +10,10 @@
 
 #include "fatfs.h"
 
-static const char *CONFIG_PATH = "/.MBPlayerConfig";
-
-static struct sFileSystemState {
-} gFS_context;
+//static const char *CONFIG_PATH = "/.MBPlayerConfig";
+//
+//static struct {
+//} gFS_context;
 
 static void fs_sd_event_handler(eSD_state new_state);
 
@@ -21,6 +21,11 @@ void fs_init(SD_initStruct *init_struct) {
 	init_struct->event_cb = fs_sd_event_handler;
 	sd_init(init_struct);
 }
+
+void fs_process() {
+	sd_process();
+}
+
 
 void fs_list_files(void) {
 	DIR dir;
