@@ -17,14 +17,27 @@
 #define MINIMAL_CAPACITY 16
 #define LOAD_FACTOR 0.7
 
+struct hm_entry {
+	char *key;
+	void *val;
+	uint32_t cashed_hash;
+};
+
+struct hash_map {
+	struct allocator *allocator;
+	struct hm_entry *entries;
+	size_t capacity;
+	size_t length;
+};
+
 static uint32_t hash_key(const char *key);
 
 static const char* hm_set_entry(struct allocator *allocator,
 		struct hm_entry *entries, size_t capacity, const char *key, void *value,
 		size_t *plength);
-static bool hm_expend(struct hash_map *map);
+static bool hm_expend(hash_map_t map);
 
-struct hash_map* hm_init(size_t capacity, struct allocator *allocator) {
+hash_map_t hm_init(size_t capacity, struct allocator *allocator) {
 	struct hash_map *map = (struct hash_map*) mem_alloc(allocator,
 			sizeof(struct hash_map));
 	if (map == NULL) {
@@ -39,7 +52,9 @@ struct hash_map* hm_init(size_t capacity, struct allocator *allocator) {
 				MINIMAL_CAPACITY);
 		map->capacity = MINIMAL_CAPACITY;
 	} else {
-		map->capacity = capacity;
+		capacity--;
+		uint32_t bit_position = 32 - __builtin_clz(capacity);
+		map->capacity = 1 << bit_position;
 	}
 
 	map->entries = (struct hm_entry*) mem_calloc(allocator, map->capacity,
@@ -51,7 +66,7 @@ struct hash_map* hm_init(size_t capacity, struct allocator *allocator) {
 	map->allocator = allocator;
 	return map;
 }
-void hm_free(struct hash_map *map) {
+void hm_free(hash_map_t map) {
 	for (size_t i = 0; i < map->capacity; i++) {
 		if (map->entries[i].key != NULL && map->entries[i].key != (void*) -1)
 			mem_dealloc(map->allocator, (void*) map->entries[i].key);
@@ -61,7 +76,7 @@ void hm_free(struct hash_map *map) {
 	mem_dealloc(map->allocator, map);
 }
 
-void* hm_get(struct hash_map *map, const char *key) {
+void* hm_get(hash_map_t map, const char *key) {
 	uint32_t hash = hash_key(key);
 	size_t index = (size_t) (hash & (uint32_t) (map->capacity - 1));
 
@@ -76,7 +91,7 @@ void* hm_get(struct hash_map *map, const char *key) {
 	}
 	return NULL;
 }
-const char* hm_set(struct hash_map *map, const char *key, void *value) {
+const char* hm_set(hash_map_t map, const char *key, void *value) {
 	if (value == NULL) {
 		LOG(CONTAINER, LOG_WARN, "Value for hash_map_set cannot be null\r\n");
 		return NULL;
@@ -98,7 +113,7 @@ const char* hm_set(struct hash_map *map, const char *key, void *value) {
 	return res;
 }
 
-bool hm_pop(struct hash_map *map, const char *key) {
+bool hm_pop(hash_map_t map, const char *key) {
 	uint32_t hash = hash_key(key);
 	size_t index = (size_t) (hash & (uint32_t) (map->capacity - 1));
 
@@ -115,7 +130,7 @@ bool hm_pop(struct hash_map *map, const char *key) {
 	return false;
 }
 
-size_t hm_length(struct hash_map *map) {
+size_t hm_length(hash_map_t map) {
 	return map->length;
 }
 
@@ -175,7 +190,7 @@ static const char* hm_set_entry(struct allocator *allocator,
 	return entries[index].key;
 }
 
-static bool hm_expend(struct hash_map *map) {
+static bool hm_expend(hash_map_t map) {
 	size_t new_capacity = map->capacity * 2;
 	if (new_capacity < map->capacity) {
 		return false;

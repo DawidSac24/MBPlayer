@@ -5,34 +5,24 @@
  *  Hash Map Implementation with FNV-1a hashing and linear probing
  */
 
-#ifndef INC_APP_HASH_MAP_H_
-#define INC_APP_HASH_MAP_H_
+#ifndef INC_COMMON_CONTAINERS_MAP_H_
+#define INC_COMMON_CONTAINERS_MAP_H_
 
 #include "Common/Allocators/allocator.h"
 
 #include <stdint.h>
 #include <stdbool.h>
 
-struct hm_entry {
-	char *key;
-	void *val;
-	uint32_t cashed_hash;
-};
+struct hash_map;
+typedef struct hash_map *hash_map_t;
 
-struct hash_map {
-	struct allocator *allocator;
-	struct hm_entry *entries;
-	size_t capacity;
-	size_t length;
-};
+hash_map_t hm_init(size_t capacity, struct allocator *allocator);
+void hm_free(hash_map_t map);
 
-struct hash_map* hm_init(size_t capacity, struct allocator *allocator);
-void hm_free(struct hash_map *map);
+void* hm_get(hash_map_t map, const char *key);
+const char* hm_set(hash_map_t map, const char *key, void *value);
+bool hm_pop(hash_map_t map, const char *key);
 
-void* hm_get(struct hash_map *map, const char *key);
-const char* hm_set(struct hash_map *map, const char *key, void *value);
-bool hm_pop(struct hash_map *map, const char *key);
+size_t hm_length(hash_map_t map);
 
-size_t hm_length(struct hash_map *map);
-
-#endif /* INC_APP_HASH_MAP_H_ */
+#endif /* INC_COMMON_CONTAINERS_MAP_H_ */
