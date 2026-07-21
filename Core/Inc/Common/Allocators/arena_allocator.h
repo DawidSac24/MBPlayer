@@ -1,0 +1,29 @@
+/*
+ * arenaAllocator.h
+ *
+ *  Created on: Jul 9, 2026
+ *      Author: Dawid Sac
+ */
+
+#ifndef INC_APP_ARENA_ALLOCATOR_H_
+#define INC_APP_ARENA_ALLOCATOR_H_
+
+#include "Common/Allocators/allocator.h"
+
+#include <stdio.h>
+#include <stdint.h>
+
+struct arena_allocator {
+	struct allocator base;
+	uint8_t *start;
+	uint8_t *end;
+	uint8_t *pos;
+};
+
+void arena_init(struct arena_allocator *arena, uint8_t *buffer, size_t size);
+void arena_free(struct allocator *self);
+
+void* arena_alloc(struct allocator *self, size_t size);
+void arena_dealloc(struct allocator *self, void *ptr);
+
+#endif /* INC_APP_ARENA_ALLOCATOR_H_ */

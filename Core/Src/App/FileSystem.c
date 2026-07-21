@@ -5,8 +5,8 @@
  *      Author: Dawid Sac
  */
 #include "App/FileSystem.h"
-#include "App/sd_driver.h"
-#include "App/Log.h"
+#include "Drivers/sd_driver.h"
+#include "Common/Utils/Log.h"
 
 #include "fatfs.h"
 
@@ -15,9 +15,9 @@
 //static struct {
 //} gFS_context;
 
-static void fs_sd_event_handler(eSD_state new_state);
+static void fs_sd_event_handler(enum sd_state new_state);
 
-void fs_init(SD_initStruct *init_struct) {
+void fs_init(struct sd_init_struct *init_struct) {
 	init_struct->event_cb = fs_sd_event_handler;
 	sd_init(init_struct);
 }
@@ -25,7 +25,6 @@ void fs_init(SD_initStruct *init_struct) {
 void fs_process() {
 	sd_process();
 }
-
 
 void fs_list_files(void) {
 	DIR dir;
@@ -70,7 +69,7 @@ static void fs_verify_directories(void) {
 	}
 }
 
-static void fs_sd_event_handler(eSD_state new_state) {
+static void fs_sd_event_handler(enum sd_state new_state) {
 	if (new_state == SD_STATE_MOUNTED) {
 		LOG(FILESYSTEM, LOG_INFO,
 				"SD mounted. Verifying system folders...\r\n");

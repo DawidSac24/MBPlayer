@@ -26,8 +26,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "App/Log.h"
+#include "Common/Utils/Log.h"
 #include "App/fileSystem.h"
+#include "Common/Allocators/arena_allocator.h"
 
 #include <stdio.h>
 /* USER CODE END Includes */
@@ -154,17 +155,17 @@ int main(void) {
 	printf("\r\n----------\r\nStarting\r\n");
 
 	// FatFS card mounting
-	SD_initStruct SD_init_struct = { SD_DET_Pin, SD_DET_GPIO_Port, &SDFatFS,
-			SDPath };
-	fs_init(&SD_init_struct);
-	printf("SD Card Information: \r\n");
-	printf("Block size : %ld\r\n", hsd1.SdCard.BlockSize);
-	printf("Block nmbr : %ld\r\n", hsd1.SdCard.BlockNbr);
-	printf("Card size : %ld\r\n",
-			(hsd1.SdCard.BlockSize * hsd1.SdCard.BlockNbr) / 1000);
-	printf("Card Version : %ld\r\n", hsd1.SdCard.CardVersion);
-
-	fs_list_files();
+//	struct sd_init_struct  SD_init_struct = { SD_DET_Pin, SD_DET_GPIO_Port, &SDFatFS,
+//			SDPath };
+//	fs_init(&SD_init_struct);
+//	printf("SD Card Information: \r\n");
+//	printf("Block size : %ld\r\n", hsd1.SdCard.BlockSize);
+//	printf("Block nmbr : %ld\r\n", hsd1.SdCard.BlockNbr);
+//	printf("Card size : %ld\r\n",
+//			(hsd1.SdCard.BlockSize * hsd1.SdCard.BlockNbr) / 1000);
+//	printf("Card Version : %ld\r\n", hsd1.SdCard.CardVersion);
+//
+//	fs_list_files();
 
 //	printf("Opening test.wav...\r\n");
 //	FIL wavFile;
@@ -185,10 +186,51 @@ int main(void) {
 //		HAL_I2S_Transmit_DMA(&hi2s1, audio_buffer, AUDIO_BUFFER_SIZE);
 
 	// 3. The Ping-Pong loop
+
+	uint8_t buffer[4096];
+
+	struct arena_allocator hm_arena;
+	arena_init(&hm_arena, buffer, sizeof(buffer));
+
+	size_t capacity = 32;
+	struct hash_map *hash_map = hm_init(capacity,
+			(struct allocator*) &hm_arena);
+
+	if (hash_map == NULL) {
+		printf("Map failed to initialize!\r\n");
+		return;
+	}
+
+	for (size_t i = 0; i < 10; i++) {
+		char key_buf[16];
+		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
+
+		const char *hm_key = hm_set(hash_map, key_buf, (void*) (uintptr_t) i);
+		printf("Set -> Key: %s\r\n", hm_key);
+	}
+
+	printf("Hash map variables set\r\n");
+
+	char key_buf[16];
+	snprintf(key_buf, sizeof(key_buf), "Track_%d", 5);
+	if (!hm_pop(hash_map, key_buf)) {
+		printf("Failed to pop the key 5\r\n");
+	}
+
+	for (size_t i = 0; i < 10; i++) {
+		char key_buf[16];
+		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
+
+		void *val = hm_get(hash_map, key_buf);
+
+		printf("Get -> Key: %s, val: %lu\r\n", key_buf,
+				(uint32_t) (uintptr_t) val);
+	}
+
 	while (1) {
 //		LOG(CORE, LOG_INFO, "Hello World!\r\n");
 		BSP_LED_Toggle(LED_GREEN);
-		fs_process();
+//		fs_process();
 		HAL_Delay(1000);
 
 //			if (buffer_state == 1) {
