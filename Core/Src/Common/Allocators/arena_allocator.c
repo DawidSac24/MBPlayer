@@ -9,7 +9,7 @@
 #include "Common/Utils/log.h"
 
 static const struct allocator_vtable s_arena_vtable = { .alloc = arena_alloc,
-		.dealloc = arena_dealloc, .free = arena_free };
+		.realloc = arena_realloc, .dealloc = arena_dealloc, .free = arena_free };
 
 void arena_init(struct arena_allocator *arena, uint8_t *buffer, size_t size) {
 	arena->start = buffer;
@@ -39,6 +39,9 @@ void* arena_alloc(struct allocator *self, size_t size) {
 
 	arena->pos += size;
 	return last_pos;
+}
+void* arena_realloc(struct allocator *self, void *ptr, size_t new_size) {
+	return NULL;
 }
 void arena_dealloc(struct allocator *self, void *ptr) {
 	return;
