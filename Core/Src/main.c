@@ -187,45 +187,45 @@ int main(void) {
 
 	// 3. The Ping-Pong loop
 
-	uint8_t buffer[4096];
-
-	struct arena_allocator hm_arena;
-	arena_init(&hm_arena, buffer, sizeof(buffer));
-
-	size_t capacity = 32;
-	struct hash_map *hash_map = hm_init(capacity,
-			(struct allocator*) &hm_arena);
-
-	if (hash_map == NULL) {
-		printf("Map failed to initialize!\r\n");
-		return;
-	}
-
-	for (size_t i = 0; i < 10; i++) {
-		char key_buf[16];
-		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
-
-		const char *hm_key = hm_set(hash_map, key_buf, (void*) (uintptr_t) i);
-		printf("Set -> Key: %s\r\n", hm_key);
-	}
-
-	printf("Hash map variables set\r\n");
-
-	char key_buf[16];
-	snprintf(key_buf, sizeof(key_buf), "Track_%d", 5);
-	if (!hm_pop(hash_map, key_buf)) {
-		printf("Failed to pop the key 5\r\n");
-	}
-
-	for (size_t i = 0; i < 10; i++) {
-		char key_buf[16];
-		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
-
-		void *val = hm_get(hash_map, key_buf);
-
-		printf("Get -> Key: %s, val: %lu\r\n", key_buf,
-				(uint32_t) (uintptr_t) val);
-	}
+//	uint8_t buffer[4096];
+//
+//	struct arena_allocator hm_arena;
+//	arena_init(&hm_arena, buffer, sizeof(buffer));
+//
+//	size_t capacity = 32;
+//	struct hash_map *hash_map = hm_init(capacity,
+//			(struct allocator*) &hm_arena);
+//
+//	if (hash_map == NULL) {
+//		printf("Map failed to initialize!\r\n");
+//		return;
+//	}
+//
+//	for (size_t i = 0; i < 10; i++) {
+//		char key_buf[16];
+//		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
+//
+//		const char *hm_key = hm_set(hash_map, key_buf, (void*) (uintptr_t) i);
+//		printf("Set -> Key: %s\r\n", hm_key);
+//	}
+//
+//	printf("Hash map variables set\r\n");
+//
+//	char key_buf[16];
+//	snprintf(key_buf, sizeof(key_buf), "Track_%d", 5);
+//	if (!hm_pop(hash_map, key_buf)) {
+//		printf("Failed to pop the key 5\r\n");
+//	}
+//
+//	for (size_t i = 0; i < 10; i++) {
+//		char key_buf[16];
+//		snprintf(key_buf, sizeof(key_buf), "Track_%d", i);
+//
+//		void *val = hm_get(hash_map, key_buf);
+//
+//		printf("Get -> Key: %s, val: %lu\r\n", key_buf,
+//				(uint32_t) (uintptr_t) val);
+//	}
 
 	while (1) {
 //		LOG(CORE, LOG_INFO, "Hello World!\r\n");

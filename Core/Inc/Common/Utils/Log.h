@@ -9,6 +9,7 @@
 #define INC_APP_LOG_H_
 
 #include <stdbool.h>
+#include <stdio.h>
 
 #define LOG_BUFFER_SIZE 128
 

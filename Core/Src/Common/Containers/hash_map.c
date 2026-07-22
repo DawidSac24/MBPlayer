@@ -10,12 +10,14 @@
 #include "Common/Utils/Log.h"
 
 #include <string.h>
+#include <stdio.h>
 
 #define FNV_OFFSET_BASIS 0x811C9DC5
 #define FNV_PRIME 0x01000193
 
 #define MIN_CAPACITY 16
 #define LOAD_FACTOR 0.7
+#define EXPEND_MULT 2
 
 struct hm_entry {
 	char *key;
@@ -38,7 +40,7 @@ static const char* hm_set_entry(struct allocator *allocator,
 static bool hm_expend(hash_map_t self);
 
 hash_map_t hm_init(struct allocator *allocator, size_t capacity) {
-	struct hash_map *self = (struct hash_map*) mem_alloc(allocator,
+	hash_map_t self = (hash_map_t) mem_alloc(allocator,
 			sizeof(struct hash_map));
 	if (self == NULL) {
 		LOG(CONTAINER, LOG_ERROR, "Failed to allocate the hash map\r\n");
@@ -194,7 +196,7 @@ static const char* hm_set_entry(struct allocator *allocator,
 }
 
 static bool hm_expend(hash_map_t self) {
-	size_t new_capacity = self->capacity * 2;
+	size_t new_capacity = self->capacity * EXPEND_MULT;
 	if (new_capacity < self->capacity) {
 		return false;
 	}

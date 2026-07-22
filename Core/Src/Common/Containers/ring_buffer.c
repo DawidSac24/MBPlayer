@@ -66,7 +66,7 @@ bool rbuf_is_full(ring_buffer_t self) {
 	return self->len == self->capacity;
 }
 
-void rbuf_put(ring_buffer_t self, void *data) {
+void rbuf_push(ring_buffer_t self, void *data) {
 	if (rbuf_is_full(self))
 		self->tail = (self->tail + 1) & (self->capacity - 1);
 	else
@@ -76,7 +76,7 @@ void rbuf_put(ring_buffer_t self, void *data) {
 	self->head = (self->head + 1) & (self->capacity - 1);
 
 }
-void* rbuf_push(ring_buffer_t self) {
+void* rbuf_pop(ring_buffer_t self) {
 	if (rbuf_is_empty(self))
 		return NULL;
 	void *val = self->data[self->tail];
