@@ -20,8 +20,8 @@ struct allocator {
 struct allocator_vtable {
 	void* (*alloc)(struct allocator *self, size_t size);
 	void* (*realloc)(struct allocator *self, void *ptr, size_t new_size);
-	void (*dealloc)(struct allocator *self, void *ptr);
-	void (*free)(struct allocator *self);
+	void (*free)(struct allocator *self, void *ptr);
+	void (*reset)(struct allocator *self);
 };
 
 static inline void* mem_alloc(struct allocator *self, size_t size) {
@@ -45,12 +45,12 @@ static inline void* mem_realloc(struct allocator *self, void *ptr,
 	return self->vtable->realloc(self, ptr, new_size);
 }
 
-static inline void mem_dealloc(struct allocator *self, void *ptr) {
-	self->vtable->dealloc(self, ptr);
+static inline void mem_free(struct allocator *self, void *ptr) {
+	self->vtable->free(self, ptr);
 }
 
-static inline void mem_free(struct allocator *self) {
-	self->vtable->free(self);
+static inline void mem_reset(struct allocator *self) {
+	self->vtable->reset(self);
 }
 
 #endif /* INC_APP_ALLOCATOR_H_ */

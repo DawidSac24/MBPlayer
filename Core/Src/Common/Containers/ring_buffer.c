@@ -39,7 +39,7 @@ ring_buffer_t rbuf_init(struct allocator *allocator, size_t capacity) {
 	self->data = mem_alloc(allocator, sizeof(void*) * self->capacity);
 	if (self->data == NULL) {
 		LOG(CONTAINER, LOG_ERROR, "Failed to allocate ring buffer data\r\n");
-		mem_dealloc(allocator, self);
+		mem_free(allocator, self);
 		return NULL;
 	}
 
@@ -54,9 +54,9 @@ void rbuf_free(ring_buffer_t self) {
 	if (!self)
 		return;
 	if (self->data) {
-		mem_dealloc(self->allocator, self->data);
+		mem_free(self->allocator, self->data);
 	}
-	mem_dealloc(self->allocator, self);
+	mem_free(self->allocator, self);
 }
 
 bool rbuf_is_empty(ring_buffer_t self) {

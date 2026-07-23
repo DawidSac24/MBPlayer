@@ -38,7 +38,7 @@ ptr_vector_t pvec_init(struct allocator *allocator, size_t capacity) {
 	self->data = mem_alloc(allocator, sizeof(void*) * capacity);
 	if (self->data == NULL) {
 		LOG(CONTAINER, LOG_ERROR, "Failed to allocate vector data\r\n");
-		mem_dealloc(allocator, self);
+		mem_free(allocator, self);
 		return NULL;
 	}
 
@@ -51,9 +51,9 @@ void pvec_free(ptr_vector_t self) {
 	if (!self)
 		return;
 	if (self->data) {
-		mem_dealloc(self->allocator, self->data);
+		mem_free(self->allocator, self->data);
 	}
-	mem_dealloc(self->allocator, self->data);
+	mem_free(self->allocator, self->data);
 }
 
 bool pvec_expend(ptr_vector_t self) {

@@ -4,8 +4,8 @@
  *  Created on: Jul 4, 2026
  *      Author: Dawid Sac
  */
-#include "App/FileSystem.h"
-#include "Drivers/sd_driver.h"
+#include "App/metadata/FileSystem.h"
+#include "Drivers/SD/sd_driver.h"
 #include "Common/Utils/Log.h"
 
 #include "fatfs.h"

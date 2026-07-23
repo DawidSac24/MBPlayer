@@ -5,7 +5,7 @@
  *      Author: Dawid Sac
  */
 
-#include <Drivers/sd_driver.h>
+#include <Drivers/SD/sd_driver.h>
 #include "Common/Utils/Log.h"
 
 #include "sdmmc.h"

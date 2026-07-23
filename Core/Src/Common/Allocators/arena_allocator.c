@@ -9,40 +9,41 @@
 #include "Common/Utils/log.h"
 
 static const struct allocator_vtable s_arena_vtable = { .alloc = arena_alloc,
-		.realloc = arena_realloc, .dealloc = arena_dealloc, .free = arena_free };
+		.realloc = arena_realloc, .free = arena_free, .reset = arena_reset };
 
-void arena_init(struct arena_allocator *arena, uint8_t *buffer, size_t size) {
-	arena->start = buffer;
-	arena->end = buffer + size;
-	arena->pos = buffer;
+void arena_init(struct arena_allocator *self, uint8_t *buffer, size_t size) {
+	self->start = buffer;
+	self->end = buffer + size;
+	self->pos = buffer;
 
-	arena->base.vtable = &s_arena_vtable;
+	self->base.vtable = &s_arena_vtable;
 }
 
-void arena_free(struct allocator *self) {
-	struct arena_allocator *arena = (struct arena_allocator*) self;
+void arena_reset(struct allocator *base) {
+	struct arena_allocator *self = (struct arena_allocator*) base;
 
-	arena->pos = arena->start;
+	self->pos = self->start;
 }
 
-void* arena_alloc(struct allocator *self, size_t size) {
-	struct arena_allocator *arena = (struct arena_allocator*) self;
+void* arena_alloc(struct allocator *base, size_t size) {
+	struct arena_allocator *self = (struct arena_allocator*) base;
 
-	uint8_t *const last_pos = arena->pos;
+	uint8_t *const last_pos = self->pos;
 	size = (size + MEM_ALLIGN - 1) & ~(MEM_ALLIGN - 1);
 
-	if (last_pos + size > arena->end || last_pos + size < arena->start) {
+	if (last_pos + size > self->end || last_pos + size < self->start) {
 		LOG(ALLOCATOR, LOG_ERROR,
 				"Arena allocator failed to allocate memory: size overflowed\r\n");
 		return NULL;
 	}
 
-	arena->pos += size;
+	self->pos += size;
 	return last_pos;
 }
-void* arena_realloc(struct allocator *self, void *ptr, size_t new_size) {
+void* arena_realloc(struct allocator *base, void *ptr, size_t new_size) {
+	LOG(ALLOCATOR, LOG_WARN, "Cannot reallocate memory on an arena");
 	return NULL;
 }
-void arena_dealloc(struct allocator *self, void *ptr) {
+void arena_free(struct allocator *base, void *ptr) {
 	return;
 }

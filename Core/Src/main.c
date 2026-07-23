@@ -27,8 +27,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Common/Utils/Log.h"
-#include "App/fileSystem.h"
+#include "App/Metadata/fileSystem.h"
 #include "Common/Allocators/arena_allocator.h"
+#include "Common/Allocators/pool_allocator.h"
 
 #include <stdio.h>
 /* USER CODE END Includes */
@@ -64,7 +65,7 @@ extern UART_HandleTypeDef hcom_uart[];
 void SystemClock_Config(void);
 static void MPU_Config(void);
 /* USER CODE BEGIN PFP */
-
+void test_pool_allocator(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -187,6 +188,7 @@ int main(void) {
 
 	// 3. The Ping-Pong loop
 
+	// TEST THE HASH MAP
 //	uint8_t buffer[4096];
 //
 //	struct arena_allocator hm_arena;
@@ -226,6 +228,7 @@ int main(void) {
 //		printf("Get -> Key: %s, val: %lu\r\n", key_buf,
 //				(uint32_t) (uintptr_t) val);
 //	}
+
 
 	while (1) {
 //		LOG(CORE, LOG_INFO, "Hello World!\r\n");
@@ -325,6 +328,46 @@ void SystemClock_Config(void) {
 }
 
 /* USER CODE BEGIN 4 */
+
+void test_pool_allocator(void) {
+	LOG(TEST, LOG_INFO, "--- Starting Pool Allocator Test ---\r\n");
+
+	uint8_t memory_buffer[64];
+	struct pool_allocator pool;
+
+	int blocks = pool_init(&pool, memory_buffer, sizeof(memory_buffer), 13);
+
+	LOG(TEST, LOG_INFO,
+			"Init: %d blocks created. Aligned block size: %zu bytes.\r\n",
+			blocks, pool.block_size);
+	LOG(TEST, LOG_INFO, "Total free blocks: %zu\r\n", pool.free_count);
+
+	void *ptr1 = pool_alloc(&pool.base, 13);
+	void *ptr2 = pool_alloc(&pool.base, 13);
+	void *ptr3 = pool_alloc(&pool.base, 13);
+
+	ptrdiff_t diff_1_2 = (uint8_t*) ptr2 - (uint8_t*) ptr1;
+	ptrdiff_t diff_2_3 = (uint8_t*) ptr3 - (uint8_t*) ptr2;
+
+	LOG(TEST, LOG_INFO, "Ptr1: %p\r\n", ptr1);
+	LOG(TEST, LOG_INFO, "Ptr2: %p (Diff: %td bytes)\r\n", ptr2, diff_1_2);
+	LOG(TEST, LOG_INFO, "Ptr3: %p (Diff: %td bytes)\r\n", ptr3, diff_2_3);
+
+	LOG(TEST, LOG_INFO, "Freeing Ptr2...\r\n");
+	pool_free(&pool.base, ptr2);
+	LOG(TEST, LOG_INFO, "Free count after free: %zu\r\n", pool.free_count);
+
+	void *ptr4 = pool_alloc(&pool.base, 13);
+	LOG(TEST, LOG_INFO, "Ptr4 allocated at: %p\r\n", ptr4);
+
+	if (ptr4 == ptr2) {
+		LOG(TEST, LOG_INFO, "[SUCCESS] LIFO Stack logic works perfectly!\r\n");
+	} else {
+		LOG(TEST, LOG_ERROR, "[FAIL] LIFO Stack logic is broken!\r\n");
+	}
+
+	LOG(TEST, LOG_INFO, "--- End of Test ---\r\n");
+}
 
 void HAL_I2S_TxHalfCpltCallback(I2S_HandleTypeDef *hi2s) {
 	buffer_state = 1;

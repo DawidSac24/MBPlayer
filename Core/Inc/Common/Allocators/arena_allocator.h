@@ -21,10 +21,10 @@ struct arena_allocator {
 };
 
 void arena_init(struct arena_allocator *arena, uint8_t *buffer, size_t size);
-void arena_free(struct allocator *self);
+void arena_reset(struct allocator *self);
 
 void* arena_alloc(struct allocator *self, size_t size);
 void* arena_realloc(struct allocator *self, void *ptr, size_t new_size);
-void arena_dealloc(struct allocator *self, void *ptr);
+void arena_free(struct allocator *self, void *ptr);
 
 #endif /* INC_APP_ARENA_ALLOCATOR_H_ */

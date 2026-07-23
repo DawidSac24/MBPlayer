@@ -62,7 +62,7 @@ hash_map_t hm_init(struct allocator *allocator, size_t capacity) {
 			sizeof(struct hm_entry));
 	if (self->entries == NULL) {
 		LOG(CONTAINER, LOG_ERROR, "Failed to allocate the hash map data\r\n");
-		mem_dealloc(allocator, self);
+		mem_free(allocator, self);
 		return NULL;
 	}
 
@@ -74,11 +74,11 @@ hash_map_t hm_init(struct allocator *allocator, size_t capacity) {
 void hm_free(hash_map_t self) {
 	for (size_t i = 0; i < self->capacity; i++) {
 		if (self->entries[i].key != NULL && self->entries[i].key != (void*) -1)
-			mem_dealloc(self->allocator, (void*) self->entries[i].key);
+			mem_free(self->allocator, (void*) self->entries[i].key);
 	}
 
-	mem_dealloc(self->allocator, self->entries);
-	mem_dealloc(self->allocator, self);
+	mem_free(self->allocator, self->entries);
+	mem_free(self->allocator, self);
 }
 
 void* hm_get(hash_map_t self, const char *key) {
@@ -217,7 +217,7 @@ static bool hm_expend(hash_map_t self) {
 
 	}
 
-	mem_dealloc(self->allocator, self->entries);
+	mem_free(self->allocator, self->entries);
 	self->entries = new_entries;
 	self->capacity = new_capacity;
 	return true;

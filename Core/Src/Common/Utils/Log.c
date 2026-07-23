@@ -10,14 +10,16 @@
 
 const char *const LogLevelStrings[] = { "DEBUG", "INFO", "WARN", "ERROR",
 		"CRITICAL" };
-const char *const SubsystemStrings[] = { "CORE", "FILESYSTEM", "AUDIO" };
+const char *const SubsystemStrings[] = { "CORE", "ALLOCATOR", "CONTAINER",
+		"FILESYSTEM", "AUDIO", "TEST" };
 
 static struct {
 	bool globalLogOn;
 	enum log_level outputLevel;
 } g_log_context;
 
-void log_record(const enum log_subsystem sys, const enum log_level level, const char *msg);
+void log_record(const enum log_subsystem sys, const enum log_level level,
+		const char *msg);
 
 void log_init(const bool globalOn, const enum log_level level) {
 	g_log_context.globalLogOn = globalOn;
@@ -41,6 +43,7 @@ void log_message(const enum log_subsystem sys, const enum log_level level,
 	log_record(sys, level, msg);
 }
 
-void log_record(const enum log_subsystem sys, const enum log_level level, const char *msg) {
+void log_record(const enum log_subsystem sys, const enum log_level level,
+		const char *msg) {
 	return;
 }
